@@ -8,10 +8,11 @@ regions:
   farm:
     # ID блока в формате <ID> или <ID:DATA>
     CROPS:7:
-      # Время регенерации в секундах
+      # Время регенерации или диапазон времени
+      # в формате <min>-<max> в секундах
       # Установите -1, чтобы блок не регенерировался
       # Обязательный параметр
-      regen-time: 20
+      regen-time: 20-40
       # Учитывать ли данные этого блока?
       # Установите false, чтобы данные этого блока не учитывались
       # Можно удалить (по умолчанию false)
@@ -26,17 +27,17 @@ regions:
       temp-block: "CROPS:1"
 
     POTATO:7:
-      regen-time: 20
+      regen-time: 20-40
       check-block-data: true
       use-temp-block: true
       temp-block: "POTATO:1"
     CARROT:7:
-      regen-time: 20
+      regen-time: 20-40
       check-block-data: true
       use-temp-block: true
       temp-block: "POTATO:1"
     BEETROOT_BLOCK:3:
-      regen-time: 20
+      regen-time: 20-40
       check-block-data: true
       use-temp-block: true
       temp-block: "BEETROOT_BLOCK:1"
@@ -77,6 +78,6 @@ regions:
 
   pumpkins-melons:
     PUMPKIN:
-      regen-time: 30
+      regen-time: 20-40
     MELON_BLOCK:
-      regen-time: 30
+      regen-time: 20-40

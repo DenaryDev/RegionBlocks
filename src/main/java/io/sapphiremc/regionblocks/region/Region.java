@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public class Region {
@@ -24,9 +25,10 @@ public class Region {
 
     public Region(String name, ConfigurationSection section) {
         this.name = name;
+        Random random = new Random();
         for (String key : section.getKeys(false)) {
             if (section.contains(key) && section.isConfigurationSection(key)) {
-                regionBlocks.add(new RegionBlock(key, section.getConfigurationSection(key)));
+                regionBlocks.add(new RegionBlock(random, key, section.getConfigurationSection(key)));
             } else {
                 RegionBlocksPlugin.getInstance().getLogger().severe("Blocks section for region " + key + " not found!");
             }
@@ -45,7 +47,11 @@ public class Region {
 
     public BrokenBlock getBrokenBlock(Location location) {
         List<BrokenBlock> blocksAtLocation = getBlocksAtLocation(location);
-        return blocksAtLocation.get(blocksAtLocation.size() - 1);
+        if (blocksAtLocation.size() > 0) {
+            return blocksAtLocation.get(blocksAtLocation.size() - 1);
+        } else {
+            return null;
+        }
     }
 
     public List<BrokenBlock> getBlocksAtLocation(Location location) {
