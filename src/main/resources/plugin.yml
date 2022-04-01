@@ -1,0 +1,41 @@
+name: RegionBlocks
+version: ${version}
+main: io.sapphiremc.regionblocks.RegionBlocksPlugin
+description: Another plugin for activmine
+authors:
+  - qKing12
+  - DenaryDev
+api-version: 1.13
+depend:
+  - WorldGuard
+
+commands:
+  regionblocks:
+    aliases: [ rb ]
+    description: Main command
+
+permissions:
+  regionblocks.admin:
+    description: Admin permission
+    default: op
+    children:
+      - regionblocks.command.reload
+      - regionblocks.command.toggle
+      - regionblocks.command.regen
+      - regionblocks.command.regenall
+
+  regionblocks.command.reload:
+    description: Allows to use /regionblocks reload command
+    default: op
+
+  regionblocks.command.toggle:
+    description: Allows to use /regionblocks toggle command
+    default: op
+
+  regionblocks.command.regen:
+    description: Allows to use /regionblocks regen command
+    default: op
+
+  regionblocks.command.regenall:
+    description: Allows to use /regionblocks regenall command
+    default: op

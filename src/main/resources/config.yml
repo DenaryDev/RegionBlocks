@@ -1,0 +1,82 @@
+# Конфигурация SapphireRegionBlocks от DenaryDev
+# Сделано на основе кода RegionBlocks от qKing12
+# Сделано специально для сервера ActivMine
+
+# Регионы
+regions:
+  # Название региона из WorldGuard
+  farm:
+    # ID блока в формате <ID> или <ID:DATA>
+    CROPS:7:
+      # Время регенерации в секундах
+      # Установите -1, чтобы блок не регенерировался
+      # Обязательный параметр
+      regen-time: 20
+      # Учитывать ли данные этого блока?
+      # Установите false, чтобы данные этого блока не учитывались
+      # Можно удалить (по умолчанию false)
+      check-block-data: true
+      # Использовать ли временный блок?
+      # Установите false, чтобы просто ломать блок
+      # Можно удалить (по умолчанию false)
+      use-temp-block: true
+      # Временный блок
+      # Работает только если включено use-temporary-block
+      # Можно удалить (по умолчанию BEDROCK)
+      temp-block: "CROPS:1"
+
+    POTATO:7:
+      regen-time: 20
+      check-block-data: true
+      use-temp-block: true
+      temp-block: "POTATO:1"
+    CARROT:7:
+      regen-time: 20
+      check-block-data: true
+      use-temp-block: true
+      temp-block: "POTATO:1"
+    BEETROOT_BLOCK:3:
+      regen-time: 20
+      check-block-data: true
+      use-temp-block: true
+      temp-block: "BEETROOT_BLOCK:1"
+
+  mine:
+    COAL_ORE:
+      regen-time: 20
+      use-temp-block: true
+      temp-block: "COBBLESTONE"
+    IRON_ORE:
+      regen-time: 35
+      use-temp-block: true
+      temp-block: "COBBLESTONE"
+    GOLD_ORE:
+      regen-time: 50
+      use-temp-block: true
+      temp-block: "COBBLESTONE"
+
+    STONE:
+      regen-time: 15
+      check-block-data: true
+      use-temp-block: true
+      temp-block: "COBBLESTONE"
+    COBBLESTONE:
+      regen-time: 10
+      use-temp-block: true
+      temp-block: "BEDROCK"
+
+  forest:
+    LOG:
+      regen-time: 60
+    LOG_2:
+      regen-time: 60
+    LEAVES:
+      regen-time: 60
+    LEAVES_2:
+      regen-time: 60
+
+  pumpkins-melons:
+    PUMPKIN:
+      regen-time: 30
+    MELON_BLOCK:
+      regen-time: 30
