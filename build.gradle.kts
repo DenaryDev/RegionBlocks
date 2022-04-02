@@ -57,6 +57,10 @@ tasks {
         options.isFork = true
     }
 
+    jar {
+        archiveBaseName.set("RegionBlocks")
+    }
+
     processResources {
         filesMatching(listOf("plugin.yml", "config.yml")) {
             expand("version" to project.version)
