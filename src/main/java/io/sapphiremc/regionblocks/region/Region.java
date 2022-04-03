@@ -21,10 +21,10 @@ public class Region {
 
     private final List<RegionBlock> regionBlocks = new ArrayList<>();
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
-    private final String name;
+    private final List<String> names;
 
-    public Region(String name, ConfigurationSection section) {
-        this.name = name;
+    public Region(List<String> names, ConfigurationSection section) {
+        this.names = names;
         Random random = new Random();
         for (String key : section.getKeys(false)) {
             if (section.contains(key) && section.isConfigurationSection(key)) {

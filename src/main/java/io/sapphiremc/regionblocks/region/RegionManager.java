@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,8 @@ public class RegionManager {
         if (config.contains("regions") && config.isConfigurationSection("regions")) {
             for (String key : config.getConfigurationSection("regions").getKeys(false)) {
                 if (config.contains("regions." + key) && config.isConfigurationSection("regions." + key)) {
-                    regions.add(new Region(key, config.getConfigurationSection("regions." + key)));
+                    List<String> names = key.contains(";") ? Arrays.stream(key.split(";")).toList() : List.of(key);
+                    regions.add(new Region(names, config.getConfigurationSection("regions." + key)));
                 } else {
                     plugin.getLogger().severe("Configuration section for region " + key + " not found!");
                 }
@@ -47,7 +49,7 @@ public class RegionManager {
 
     public Region getRegionByName(String name) {
         for (Region region : regions) {
-            if (region.getName().equals(name)) return region;
+            if (region.getNames().contains(name)) return region;
         }
         return null;
     }
@@ -64,7 +66,7 @@ public class RegionManager {
             }
         }
         for (Region regionToReturn : regions) {
-            if (regionToReturn.getName().equals(regionName))
+            if (regionToReturn.getNames().contains(regionName))
                 return regionToReturn;
         }
         return null;
