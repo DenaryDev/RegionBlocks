@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "io.sapphiremc.regionblocks"
-version = "1.0.1"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -17,9 +17,9 @@ repositories {
 }
 
 dependencies  {
-    compileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:6.1.4-SNAPSHOT")
-    compileOnly("com.sk89q.worldguard:worldguard-legacy:6.2")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.10")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5")
     compileOnly("org.projectlombok:lombok:1.18.22")
 
     annotationProcessor("org.projectlombok:lombok:1.18.22")
@@ -68,7 +68,8 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.12.2")
+        minecraftVersion("1.16.5")
+        jvmArgs("-DPaper.IgnoreJavaVersion=true")
         if (!System.getenv("useCustomCore").isNullOrEmpty()) {
             serverJar.set(project.projectDir.resolve("run/server.jar"))
         }

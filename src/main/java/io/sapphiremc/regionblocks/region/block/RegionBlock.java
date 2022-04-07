@@ -5,7 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.region;
+package io.sapphiremc.regionblocks.region.block;
 
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import lombok.Getter;
@@ -16,30 +16,23 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.Random;
 
 @Getter
-@SuppressWarnings("deprecation")
 public class RegionBlock {
     private final Random random;
-    private final boolean useTemporaryMaterial;
-    private final boolean checkBlockData;
-    private Material material;
-    private byte data = 0;
-    private int[] regenSeconds;
+    //private final boolean checkBlockTags;
+    private final Material material;
+    private boolean useTemporaryMaterial = false;
     private Material temporaryMaterial;
-    private byte temporaryData;
+    private int[] regenSeconds;
 
     public RegionBlock(Random random, String material, ConfigurationSection section) {
         this.random = random;
-        this.checkBlockData = section.getBoolean("check-block-data", false);
-        this.useTemporaryMaterial = section.getBoolean("use-temp-block", false);
+        //this.checkBlockTags = section.getBoolean("check-block-tags", false);
+        this.material = Material.matchMaterial(material);
 
-        if (material.contains(":")) {
-            this.data = Byte.parseByte(material.split(":")[1]);
-            material = material.split(":")[0];
-        }
-        try {
-            this.material = Material.getMaterial(Integer.parseInt(material));
-        } catch (Exception ex) {
-            this.material = Material.getMaterial(material);
+        if (section.contains("temp-material")) {
+            material = section.getString("temp-material", "BEDROCK");
+            this.useTemporaryMaterial = true;
+            this.temporaryMaterial = Material.matchMaterial(material);
         }
 
         if (section.isInt("regen-time")) {
@@ -57,19 +50,6 @@ public class RegionBlock {
                 }
             }
         }
-
-        if (useTemporaryMaterial) {
-            material = section.getString("temp-block", "BEDROCK");
-            if (material.contains(":")) {
-                this.temporaryData = Byte.parseByte(material.split(":")[1]);
-                material = material.split(":")[0];
-            }
-            try {
-                this.temporaryMaterial = Material.getMaterial(Integer.parseInt(material));
-            } catch (Exception ex) {
-                this.temporaryMaterial = Material.getMaterial(material);
-            }
-        }
     }
 
     public int getRegenSeconds() {
@@ -84,10 +64,10 @@ public class RegionBlock {
     }
 
     public boolean compareBlock(Block getBlock) {
-        if (checkBlockData) {
-            return (getBlock.getType().equals(material) && getBlock.getData() == data) || (getBlock.getType().equals(material) && data == -1);
-        } else {
+        //if (checkBlockTags) {
+        //    return (getBlock.getType().equals(material) && getBlock.getData() == data) || (getBlock.getType().equals(material) && data == -1);
+        //} else {
             return getBlock.getType().equals(material);
-        }
+        //}
     }
 }

@@ -7,10 +7,12 @@
  */
 package io.sapphiremc.regionblocks.region;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
+import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -57,8 +59,9 @@ public class RegionManager {
     public Region getRegionAtLocation(Location loc) {
         int priority = -1;
         String regionName = "";
-        com.sk89q.worldguard.protection.managers.RegionManager regionManager = WorldGuardPlugin.inst().getRegionManager(loc.getWorld());
-        ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
+        com.sk89q.worldguard.protection.managers.RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld()));
+        if (regionManager == null) return null;
+        ApplicableRegionSet set = regionManager.getApplicableRegions(BukkitAdapter.adapt(loc).toVector().toBlockPoint());
         for (ProtectedRegion region : set) {
             if (region.getPriority() > priority) {
                 priority = region.getPriority();
@@ -84,14 +87,12 @@ public class RegionManager {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void regenBlock(Region region, Location location) {
         BrokenBlock block = region.getBrokenBlock(location);
         if (block == null) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             location.getBlock().setType(block.getType());
-            location.getBlock().setData(block.getData(), true);
             region.removeBrokenBlock(block);
         });
     }

@@ -8,78 +8,79 @@ regions:
   # Можно указывать несколько регионов, разделяя их ;
   # Например: farm или farm;farm2;farm3
   farm;farm2;farm3;farm4:
-    # ID блока в формате <ID> или <ID:DATA>
-    CROPS:7:
+    # ID блока в формате <material> или <material:tags>
+    wheat[age=7]:
       # Время регенерации или диапазон времени
       # в формате <min>-<max> в секундах
       # Установите -1, чтобы блок не регенерировался
       # Обязательный параметр
       regen-time: 20-40
-      # Учитывать ли данные этого блока?
-      # Установите false, чтобы данные этого блока не учитывались
-      # Можно удалить (по умолчанию false)
-      check-block-data: true
-      # Использовать ли временный блок?
-      # Установите false, чтобы просто ломать блок
-      # Можно удалить (по умолчанию false)
-      use-temp-block: true
+      # Проверять ли теги этого блока при регенерации?
+      # Можно удалить (по умолчанию теги блоков не будут проверяться)
+      check-block-tags: true
       # Временный блок
-      # Работает только если включено use-temporary-block
-      # Можно удалить (по умолчанию BEDROCK)
-      temp-block: "CROPS:1"
+      # Работает, только если включено use-temporary-block
+      # Можно удалить (по умолчанию временный блок не будет использоваться)
+      temp-block: "wheat[age=1]"
 
-    POTATO:7:
+    potatoes[age=7]:
       regen-time: 20-40
-      check-block-data: true
-      use-temp-block: true
-      temp-block: "POTATO:1"
-    CARROT:7:
+      check-block-tags: true
+      temp-block: "potatoes[age=1]"
+    carrots[age=7]:
       regen-time: 20-40
-      check-block-data: true
-      use-temp-block: true
-      temp-block: "POTATO:1"
-    BEETROOT_BLOCK:3:
+      temp-block: "carrots[age=1]"
+    beetroots[age=3]:
       regen-time: 20-40
-      check-block-data: true
-      use-temp-block: true
-      temp-block: "BEETROOT_BLOCK:1"
+      check-block-tags: true
+      temp-block: "beetroots[age=1]"
 
   mine:
-    COAL_ORE:
+    coal_ore:
       regen-time: 20
-      use-temp-block: true
-      temp-block: "COBBLESTONE"
-    IRON_ORE:
+      temp-block: "cobblestone"
+    iron_ore:
       regen-time: 35
-      use-temp-block: true
-      temp-block: "COBBLESTONE"
-    GOLD_ORE:
+      temp-block: "cobblestone"
+    gold_ore:
       regen-time: 50
-      use-temp-block: true
-      temp-block: "COBBLESTONE"
+      temp-block: "cobblestone"
 
-    STONE:
+    stone:
       regen-time: 15
-      check-block-data: true
-      use-temp-block: true
-      temp-block: "COBBLESTONE"
-    COBBLESTONE:
+      temp-block: "cobblestone"
+    cobblestone:
       regen-time: 10
-      use-temp-block: true
-      temp-block: "BEDROCK"
+      temp-block: "bedrock"
 
   forest:
-    LOG:
-      regen-time: 60
-    LOG_2:
-      regen-time: 60
-    LEAVES:
-      regen-time: 60
-    LEAVES_2:
-      regen-time: 60
+    oak_log:
+      regen-time: 6
+    spruce_log:
+      regen-time: 6
+    birch_log:
+      regen-time: 6
+    dark_oak_log:
+      regen-time: 6
+    acacia_log:
+      regen-time: 6
+    jungle_log:
+      regen-time: 6
+    oak_leaves:
+      regen-time: 6
+    spruce_leaves:
+      regen-time: 6
+    birch_leaves:
+      regen-time: 6
+    dark_oak_leaves:
+      regen-time: 6
+    acacia_leaves:
+      regen-time: 6
+    jungle_leaves:
+      regen-time: 6
 
   pumpkins-melons:
-    PUMPKIN:
+    pumpkin:
       regen-time: 20-40
-    MELON_BLOCK:
+    melon:
       regen-time: 20-40

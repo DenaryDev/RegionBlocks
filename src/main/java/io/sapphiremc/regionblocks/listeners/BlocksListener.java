@@ -9,8 +9,8 @@ package io.sapphiremc.regionblocks.listeners;
 
 import io.sapphiremc.regionblocks.region.Region;
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
-import io.sapphiremc.regionblocks.region.RegionBlock;
-import io.sapphiremc.regionblocks.region.BrokenBlock;
+import io.sapphiremc.regionblocks.region.block.RegionBlock;
+import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -28,7 +28,6 @@ public class BlocksListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    @SuppressWarnings("deprecation")
     public void onBlockBreak(BlockBreakEvent event) {
         if (plugin.getRegionManager().canBreak(event.getPlayer()))
             return;
@@ -44,13 +43,12 @@ public class BlocksListener implements Listener {
             if (regionBlock.compareBlock(block)) {
                 event.setCancelled(false);
                 Location location = block.getLocation();
-                BrokenBlock brokenBlock = new BrokenBlock(location, block.getType(), block.getData(), region.getBlocksAtLocation(location).size());
+                BrokenBlock brokenBlock = new BrokenBlock(location, block.getType(), region.getBlocksAtLocation(location).size());
 
                 if (regionBlock.isUseTemporaryMaterial())
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        block.setType(regionBlock.getTemporaryMaterial());
-                        block.setData(regionBlock.getTemporaryData(), true);
-                    });
+                    Bukkit.getScheduler().runTask(plugin, () ->
+                            block.setType(regionBlock.getTemporaryMaterial()));
+
                 if (regionBlock.getRegenSeconds() != -1) {
                     region.addBrokenBlock(brokenBlock);
                     Bukkit.getScheduler().runTaskLater(plugin, () ->

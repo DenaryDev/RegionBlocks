@@ -8,6 +8,8 @@
 package io.sapphiremc.regionblocks.region;
 
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
+import io.sapphiremc.regionblocks.region.block.BrokenBlock;
+import io.sapphiremc.regionblocks.region.block.RegionBlock;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

@@ -5,7 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.region;
+package io.sapphiremc.regionblocks.region.block;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,5 @@ import org.bukkit.Material;
 public class BrokenBlock {
     private final Location location;
     private final Material type;
-    private final byte data;
     private final int priority;
 }
