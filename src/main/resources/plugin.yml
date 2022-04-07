@@ -5,7 +5,7 @@ description: Another plugin for activmine
 authors:
   - qKing12
   - DenaryDev
-api-version: 1.13
+api-version: 1.16
 depend:
   - WorldGuard
 
@@ -13,6 +13,7 @@ commands:
   regionblocks:
     aliases: [ rb ]
     description: Main command
+    permission: regionblocks.command.use
 
 permissions:
   regionblocks.admin:
@@ -23,6 +24,10 @@ permissions:
       - regionblocks.command.toggle
       - regionblocks.command.regen
       - regionblocks.command.regenall
+
+  regionblocks.command.use:
+    description: Allows to use /regionblocks command
+    default: op
 
   regionblocks.command.reload:
     description: Allows to use /regionblocks reload command
@@ -38,4 +43,8 @@ permissions:
 
   regionblocks.command.regenall:
     description: Allows to use /regionblocks regenall command
+    default: op
+
+  regionblocks.command.shutdown:
+    description: Allows to use /regionblocks shutdown command
     default: op
