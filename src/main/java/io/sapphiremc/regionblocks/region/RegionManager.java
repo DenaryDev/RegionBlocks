@@ -14,6 +14,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import io.sapphiremc.regionblocks.region.block.BlockDataSerializer;
 import io.sapphiremc.regionblocks.region.block.BrokenBlock;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,6 +31,7 @@ public class RegionManager {
 
     private final RegionBlocksPlugin plugin;
 
+    @Getter
     private final List<Region> regions = new ArrayList<>();
     private final List<UUID> toggled = new ArrayList<>();
 

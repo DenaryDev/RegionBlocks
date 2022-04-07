@@ -13,11 +13,16 @@ import io.sapphiremc.regionblocks.region.RegionManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class RegionBlocksCommand implements CommandExecutor {
+public class RegionBlocksCommand implements CommandExecutor, TabCompleter {
 
     private final RegionBlocksPlugin plugin;
 
@@ -95,6 +100,7 @@ public class RegionBlocksCommand implements CommandExecutor {
                         if (args.length == 1 && sender.hasPermission("regionblocks.command.shutdown")) {
                             regionManager.regenAllRegions();
                             plugin.getServer().shutdown();
+                            sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы, останавливаю сервер!");
                             return true;
                         }
                     }
@@ -110,6 +116,45 @@ public class RegionBlocksCommand implements CommandExecutor {
             sender.sendMessage("§e/rb shutdown §7- §fРегенерирует все регионы и останавливает сервер.");
             sender.sendMessage(" ");
         }
-        return false;
+        return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        List<String> aliases = new ArrayList<>();
+
+        if (args.length == 1) {
+            if (args[0].isEmpty()) {
+                if (sender.hasPermission("regionblocks.command.reload")) aliases.add("reload");
+                if (sender.hasPermission("regionblocks.command.regen")) aliases.add("regen");
+                if (sender.hasPermission("regionblocks.command.regenall")) aliases.add("regenall");
+                if (sender.hasPermission("regionblocks.command.shutdown")) aliases.add("shutdown");
+            } else {
+                String arg = args[0];
+                if ("reload".contains(arg) && sender.hasPermission("regionblocks.command.reload")) aliases.add("reload");
+                if ("regen".contains(arg) && sender.hasPermission("regionblocks.command.regen")) aliases.add("regen");
+                if ("regenall".contains(arg) && sender.hasPermission("regionblocks.command.regenall")) aliases.add("regenall");
+                if ("shutdown".contains(arg) && sender.hasPermission("regionblocks.command.shutdown")) aliases.add("shutdown");
+            }
+        } else if (args.length == 2) {
+            if (args[1].isEmpty()) {
+                if (sender.hasPermission("regionblocks.command.regen")) {
+                    for (Region region : plugin.getRegionManager().getRegions()) {
+                        aliases.addAll(region.getNames());
+                    }
+                }
+            } else {
+                String arg = args[1];
+                if (sender.hasPermission("regionblocks.command.regen")) {
+                    for (Region region : plugin.getRegionManager().getRegions()) {
+                        for (String name : region.getNames()) {
+                            if (name.startsWith(arg)) aliases.add(name);
+                        }
+                    }
+                }
+            }
+        }
+
+        return aliases;
     }
 }
