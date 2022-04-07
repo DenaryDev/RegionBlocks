@@ -25,6 +25,7 @@ public class Region {
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
     private final List<String> names;
 
+    @SuppressWarnings("ConstantConditions")
     public Region(List<String> names, ConfigurationSection section) {
         this.names = names;
         Random random = new Random();

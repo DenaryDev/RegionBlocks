@@ -10,12 +10,12 @@ package io.sapphiremc.regionblocks.region.block;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Getter
 @RequiredArgsConstructor
 public class BrokenBlock {
     private final Location location;
-    private final Material type;
+    private final BlockData blockData;
     private final int priority;
 }

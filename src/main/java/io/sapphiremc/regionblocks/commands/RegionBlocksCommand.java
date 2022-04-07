@@ -14,7 +14,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class RegionBlocksCommand implements CommandExecutor {
 
     private final RegionBlocksPlugin plugin;
@@ -24,7 +26,7 @@ public class RegionBlocksCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.hasPermission("regionblocks.command.use")) {
             if (args.length > 0) {
                 RegionManager regionManager = plugin.getRegionManager();
@@ -80,7 +82,9 @@ public class RegionBlocksCommand implements CommandExecutor {
                             }
                         }
                     }
+                    //noinspection SpellCheckingInspection
                     case "regenall" -> {
+                        //noinspection SpellCheckingInspection
                         if (args.length == 1 && sender.hasPermission("regionblocks.command.regenall")) {
                             regionManager.regenAllRegions();
                             sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы!");
@@ -90,10 +94,11 @@ public class RegionBlocksCommand implements CommandExecutor {
                 }
             }
             sender.sendMessage("§bRegionBlocks §8| §6Помощь по команде /regionblocks (/rb)");
-            sender.sendMessage("§7§oАгрументы в <> обязательны, а в [] не обязательны.");
+            sender.sendMessage("§7§oАргументы в <> обязательны, а в [] не обязательны.");
             sender.sendMessage("§e/rb reload §7- §fПерезагружает плагин.");
             //sender.sendMessage("§e/regionblocks toggle §7- §fПереключает ломание блоков.");
             sender.sendMessage("§e/rb regen [регион] §7- §fРегенерирует указанный регион или регион, в котором вы находитесь");
+            //noinspection SpellCheckingInspection
             sender.sendMessage("§e/rb regenall §7- §fРегенерирует все регионы.");
             sender.sendMessage(" ");
         }

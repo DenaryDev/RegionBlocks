@@ -11,7 +11,6 @@ import io.sapphiremc.regionblocks.commands.RegionBlocksCommand;
 import io.sapphiremc.regionblocks.listeners.BlocksListener;
 import io.sapphiremc.regionblocks.region.RegionManager;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,11 +20,9 @@ public class RegionBlocksPlugin extends JavaPlugin {
     private static RegionBlocksPlugin instance;
     @Getter
     private volatile RegionManager regionManager;
-    @Getter
-    @Setter
-    private boolean shudownInit = false;
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onEnable() {
         instance = this;
         saveDefaultConfig();

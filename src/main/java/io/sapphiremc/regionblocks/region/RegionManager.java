@@ -12,6 +12,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
+import io.sapphiremc.regionblocks.region.block.BlockDataSerializer;
 import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ public class RegionManager {
     private final List<Region> regions = new ArrayList<>();
     private final List<UUID> toggled = new ArrayList<>();
 
+    @SuppressWarnings("ConstantConditions")
     public void reloadRegions(FileConfiguration config) {
         regions.clear();
 
@@ -92,7 +94,7 @@ public class RegionManager {
         if (block == null) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            location.getBlock().setType(block.getType());
+            BlockDataSerializer.apply(location.getBlock(), block.getBlockData());
             region.removeBrokenBlock(block);
         });
     }

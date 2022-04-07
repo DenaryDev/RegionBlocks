@@ -40,21 +40,22 @@ public class BlockData {
 
     private final Material material;
 
+    private boolean hasTags = false;
+
     // Shared data
     private int age;
     private int power;
     private boolean attached;
     private Bisected.Half half;
-    private Set<BlockFace> faces;
     private BlockFace facing;
+    private BlockFace faceAttached;
     private int level;
     private boolean lit;
     private boolean open;
-    private Set<Axis> axes;
     private Axis axis;
     private boolean powered;
-    private BlockFace rotation;
     private Rail.Shape shape;
+    private BlockFace rotation;
     private boolean snowy;
     private boolean waterlogged;
 
