@@ -103,10 +103,10 @@ public class BlockDataSerializer {
         String mat = s.replaceAll("\\[([a-zA-Z0-9=,])+]", "");
         Material material = Material.matchMaterial(mat);
         if (material == null) {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Unable to match material '" + mat + "'!");
+            RegionBlocksPlugin.getInstance().getLogger().severe("Unable to match material '" + mat + "'!");
             return null;
         } else if (!material.isBlock()) {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Material " + mat + " is not a block!");
+            RegionBlocksPlugin.getInstance().getLogger().severe("Material " + mat + " is not a block!");
             return null;
         }
 

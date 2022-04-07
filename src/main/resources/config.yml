@@ -104,7 +104,7 @@ regions:
       dark_oak_leaves:
         regen-time: 60
       acacia_leaves:
-      regen-time: 60
+        regen-time: 60
       jungle_leaves:
         regen-time: 60
 

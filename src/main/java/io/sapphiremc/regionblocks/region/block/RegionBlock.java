@@ -46,7 +46,7 @@ public class RegionBlock {
         String material = section.getName();
         this.random = random;
         this.blockData = BlockDataSerializer.serialize(material);
-        if (this.blockData == null) RegionBlocksPlugin.getInstance().getLogger().warning("Invalid material (" + material + ") for block section '" + section.getName() + "'!");
+        if (this.blockData == null) RegionBlocksPlugin.getInstance().getLogger().severe("Invalid material (" + material + ") for block section '" + section.getName() + "'!");
 
         if (section.contains("regen-time")) {
             if (section.isInt("regen-time")) {
@@ -59,13 +59,13 @@ public class RegionBlock {
                         int max = Integer.parseInt(strings[1]);
                         this.regenSeconds = new int[]{min, max};
                     } catch (IllegalArgumentException ex) {
-                        RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block section '" + section.getName() + "'!");
+                        RegionBlocksPlugin.getInstance().getLogger().severe("Invalid regeneration time for block section '" + section.getName() + "'!");
                         ex.printStackTrace();
                     }
                 }
             }
         } else {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block section '" + section.getName() + "'!");
+            RegionBlocksPlugin.getInstance().getLogger().severe("Invalid regeneration time for block section '" + section.getName() + "'!");
         }
 
         if (section.contains("temp-block") && section.isString("temp-block")) {
@@ -73,7 +73,7 @@ public class RegionBlock {
             if (tempMaterial.isEmpty()) return;
             this.useTempBlock = true;
             this.tempBlockData = BlockDataSerializer.serialize(tempMaterial);
-            if (this.tempBlockData == null) RegionBlocksPlugin.getInstance().getLogger().warning("Invalid temporary material (" + tempMaterial + ") for block section '" + section.getName() + "'!");
+            if (this.tempBlockData == null) RegionBlocksPlugin.getInstance().getLogger().severe("Invalid temporary material (" + tempMaterial + ") for block section '" + section.getName() + "'!");
         }
     }
 
