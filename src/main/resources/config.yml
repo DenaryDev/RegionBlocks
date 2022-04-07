@@ -1,6 +1,6 @@
 # Конфигурация SapphireRegionBlocks от DenaryDev
 # Сделано на основе кода RegionBlocks от qKing12
-# Сделано специально для сервера ActivMine
+# Сделано специально для сервера ActiveMine
 
 # Регионы
 regions:
@@ -8,16 +8,13 @@ regions:
   # Можно указывать несколько регионов, разделяя их ;
   # Например: farm или farm;farm2;farm3
   farm;farm2;farm3;farm4:
-    # ID блока в формате <material> или <material:tags>
+    # ID блока в формате <material> или <material[tag1=value1,tag2=value2,...]>
     wheat[age=7]:
       # Время регенерации или диапазон времени
       # в формате <min>-<max> в секундах
       # Установите -1, чтобы блок не регенерировался
       # Обязательный параметр
       regen-time: 20-40
-      # Проверять ли теги этого блока при регенерации?
-      # Можно удалить (по умолчанию теги блоков не будут проверяться)
-      check-block-tags: true
       # Временный блок
       # Работает, только если включено use-temporary-block
       # Можно удалить (по умолчанию временный блок не будет использоваться)
@@ -25,14 +22,12 @@ regions:
 
     potatoes[age=7]:
       regen-time: 20-40
-      check-block-tags: true
       temp-block: "potatoes[age=1]"
     carrots[age=7]:
       regen-time: 20-40
       temp-block: "carrots[age=1]"
     beetroots[age=3]:
       regen-time: 20-40
-      check-block-tags: true
       temp-block: "beetroots[age=1]"
 
   mine:
