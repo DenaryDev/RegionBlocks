@@ -11,8 +11,10 @@ import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import io.sapphiremc.regionblocks.region.block.RegionBlock;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,27 +26,47 @@ public class Region {
     private final List<RegionBlock> regionBlocks = new ArrayList<>();
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
     private final List<String> names;
+    private String permission = null;
+    private String permissionMessage = null;
 
     @SuppressWarnings("ConstantConditions")
     public Region(List<String> names, ConfigurationSection section) {
         this.names = names;
+        if (section.contains("permission") && section.isString("permission")) {
+            permission = section.getString("permission");
+        }
+        if (section.contains("permission-message") && section.isString("permission-message")) {
+            permissionMessage = section.getString("permission-message");
+        }
+
         Random random = new Random();
-        for (String key : section.getKeys(false)) {
-            if (section.contains(key) && section.isConfigurationSection(key)) {
-                RegionBlock regionblock = new RegionBlock(random, section.getConfigurationSection(key));
-                if (regionblock.getBlockData() != null && regionblock.getRegenSeconds() >= -1) {
-                    if (regionblock.isUseTempBlock()) {
-                        if (regionblock.getTempBlockData() != null) {
+        if (section.contains("blocks") && section.isConfigurationSection("blocks")) {
+            ConfigurationSection blocks = section.getConfigurationSection("blocks");
+            for (String key : blocks.getKeys(false)) {
+                if (blocks.contains(key) && blocks.isConfigurationSection(key)) {
+                    RegionBlock regionblock = new RegionBlock(random, blocks.getConfigurationSection(key));
+                    if (regionblock.getBlockData() != null && regionblock.getRegenSeconds() >= -1) {
+                        if (regionblock.isUseTempBlock()) {
+                            if (regionblock.getTempBlockData() != null) {
+                                regionBlocks.add(regionblock);
+                            }
+                        } else {
                             regionBlocks.add(regionblock);
                         }
-                    } else {
-                        regionBlocks.add(regionblock);
                     }
+                } else {
+                    RegionBlocksPlugin.getInstance().getLogger().severe("Section for block " + key + " in region " + section.getName() + " not found!");
                 }
-            } else {
-                RegionBlocksPlugin.getInstance().getLogger().severe("Blocks section for region " + key + " not found!");
             }
         }
+    }
+
+    public boolean checkBreak(Player player) {
+        if (permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', permissionMessage));
+            return false;
+        }
+        return true;
     }
 
     public void addBrokenBlock(BrokenBlock block) {

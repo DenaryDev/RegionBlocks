@@ -41,6 +41,7 @@ public class BlocksListener implements Listener {
             return;
 
         event.setCancelled(true);
+        if (!region.checkBreak(event.getPlayer())) return;
         for (RegionBlock regionBlock : region.getRegionBlocks()) {
             if (regionBlock.compareBlock(block)) {
                 event.setCancelled(false);

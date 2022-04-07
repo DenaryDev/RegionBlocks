@@ -5,92 +5,146 @@
 # Регионы
 regions:
   # Название региона из WorldGuard
-  # Можно указывать несколько регионов, разделяя их ;
-  # Например: farm или farm;farm2;farm3
-  farm;farm2;farm3;farm4:
-    # ID блока в формате <material> или <material[tag1=value1,tag2=value2,...]>
-    wheat[age=7]:
-      # Время регенерации или диапазон времени
-      # в формате <min>-<max> в секундах
-      # Установите -1, чтобы блок не регенерировался
-      # Обязательный параметр
-      regen-time: 20-40
-      # Временный блок
-      # Работает, только если включено use-temporary-block
-      # Можно удалить (по умолчанию временный блок не будет использоваться)
-      temp-block: "wheat[age=1]"
+  # Можно указывать несколько регионов, разделяя их символом ';'
+  # Например: region или region1;region2;region3...
+  wheat_farm;potato_farm;carrot_farm;beet_farm:
+    # Право на ломание блоков в этом регионе
+    # Пример: regionblocks.region.farm
+    # Можно удалить или закомментировать, поставив # перед строкой
+    # Если поставить '' или убрать, то право не будет использоваться
+    permission: "regionblocks.region.farm"
 
-    potatoes[age=7]:
-      regen-time: 20-40
-      temp-block: "potatoes[age=1]"
-    carrots[age=7]:
-      regen-time: 20-40
-      temp-block: "carrots[age=1]"
-    beetroots[age=3]:
-      regen-time: 20-40
-      temp-block: "beetroots[age=1]"
+    # Сообщение, которое отправляется игроку, если у него нет права
+    # Работает только если право настроено!
+    # Можно удалить или закомментировать, поставив # перед строкой
+    # Если поставить '' или убрать, то сообщение не будет использоваться
+    permission-message: "&cУ вас недостаточно прав, чтобы ломать блоки в этом регионе!"
+
+    # Блоки для этого региона
+    blocks:
+      # Материал блока в формате <material> или <material[tag1=value1,tag2=value2...]>
+      wheat[age=7]:
+        # Время регенерации или диапазон времени
+        # в формате <min>-<max> в секундах
+        # Установите -1, чтобы блок не регенерировался
+        # Обязательный параметр
+        regen-time: 20-40
+        # Временный блок
+        # Формат временного материала такой же, как материал блока
+        # Можно удалить или закомментировать, поставив # перед строкой
+        # Если поставить '' или убрать, то временный блок не будет использоваться
+        temp-block: "wheat[age=1]"
+
+      potatoes[age=7]:
+        regen-time: 20-40
+        temp-block: "potatoes[age=1]"
+      carrots[age=7]:
+        regen-time: 20-40
+        temp-block: "carrots[age=1]"
+      beetroots[age=3]:
+        regen-time: 20-40
+        temp-block: "beetroots[age=1]"
 
   mine:
-    coal_ore:
-      regen-time: 20
-      temp-block: "cobblestone"
-    iron_ore:
-      regen-time: 35
-      temp-block: "cobblestone"
-    gold_ore:
-      regen-time: 50
-      temp-block: "cobblestone"
+    #permission: "regionblocks.region.mine"
+    blocks:
+      coal_ore:
+        regen-time: 20
+        temp-block: "cobblestone"
+      iron_ore:
+        regen-time: 35
+        temp-block: "cobblestone"
+      gold_ore:
+        regen-time: 50
+        temp-block: "cobblestone"
 
-    stone:
-      regen-time: 15
-      temp-block: "cobblestone"
-    cobblestone:
-      regen-time: 10
-      temp-block: "bedrock"
+      stone:
+        regen-time: 15
+        temp-block: "cobblestone"
+      cobblestone:
+        regen-time: 10
+        temp-block: "bedrock"
 
   forest:
-    # Woods
-    oak_wood:
-      regen-time: 6
-    spruce_wood:
-      regen-time: 6
-    birch_wood:
-      regen-time: 6
-    dark_oak_wood:
-      regen-time: 6
-    acacia_wood:
-      regen-time: 6
-    jungle_wood:
-      regen-time: 6
-    # Logs
-    oak_log:
-      regen-time: 6
-    spruce_log:
-      regen-time: 6
-    birch_log:
-      regen-time: 6
-    dark_oak_log:
-      regen-time: 6
-    acacia_log:
-      regen-time: 6
-    jungle_log:
-      regen-time: 6
-    # Leaves
-    oak_leaves:
-      regen-time: 6
-    spruce_leaves:
-      regen-time: 6
-    birch_leaves:
-      regen-time: 6
-    dark_oak_leaves:
-      regen-time: 6
-    acacia_leaves:
-      regen-time: 6
-    jungle_leaves:
-      regen-time: 6
+    #permission: "regionblocks.region.forest"
+    blocks:
+      # Woods
+      oak_wood:
+        regen-time: 60
+      spruce_wood:
+        regen-time: 60
+      birch_wood:
+        regen-time: 60
+      dark_oak_wood:
+        regen-time: 60
+      acacia_wood:
+        regen-time: 60
+      jungle_wood:
+        regen-time: 60
+      # Logs
+      oak_log:
+        regen-time: 60
+      spruce_log:
+        regen-time: 60
+      birch_log:
+        regen-time: 60
+      dark_oak_log:
+        regen-time: 60
+      acacia_log:
+        regen-time: 60
+      jungle_log:
+        regen-time: 60
+      # Leaves
+      oak_leaves:
+        regen-time: 60
+      spruce_leaves:
+        regen-time: 60
+      birch_leaves:
+        regen-time: 60
+      dark_oak_leaves:
+        regen-time: 60
+      acacia_leaves:
+      regen-time: 60
+      jungle_leaves:
+        regen-time: 60
 
-  pumpkins-melons:
-    pumpkin:
-      regen-time: 20-40
-    melon:
-      regen-time: 20-40
+  melon_farm:
+    #permission: "regionblocks.region.melon_farm"
+    blocks:
+      pumpkin:
+        regen-time: 20-40
+      melon:
+        regen-time: 20-40
+
+  nether:
+    #permission: "regionblocks.region.nether"
+    blocks:
+      crimson_stem:
+        regen-time: 75
+      warped_stem:
+        regen-time: 75
+      crimson_hyphae:
+        regen-time: 75
+      warped_hyphae:
+        regen-time: 75
+      nether_wart_block:
+        regen-time: 75
+      warped_wart_block:
+        regen-time: 75
+      shroomlight:
+        regen-time: 75
+      #weeping_vines_plant:
+      #  regen-time: 75
+      #weeping_vines:
+      #  regen-time: 75
+
+      nether_sprouts:
+        regen-time: 30-60
+      crimson_roots:
+        regen-time: 30-60
+      warped_roots:
+        regen-time: 30-60
+      crimson_fungus:
+        regen-time: 40-60
+      warped_fungus:
+        regen-time: 40-60

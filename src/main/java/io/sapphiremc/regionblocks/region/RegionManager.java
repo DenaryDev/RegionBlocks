@@ -43,7 +43,9 @@ public class RegionManager {
             for (String key : config.getConfigurationSection("regions").getKeys(false)) {
                 if (config.contains("regions." + key) && config.isConfigurationSection("regions." + key)) {
                     List<String> names = key.contains(";") ? Arrays.stream(key.split(";")).toList() : List.of(key);
-                    regions.add(new Region(names, config.getConfigurationSection("regions." + key)));
+                    Region region = new Region(names, config.getConfigurationSection("regions." + key));
+                    System.out.println("RegionBlocks size for region " + key + " is " + region.getRegionBlocks().size());
+                    if (region.getRegionBlocks().size() > 0) regions.add(region);
                 } else {
                     plugin.getLogger().severe("Configuration section for region " + key + " not found!");
                 }

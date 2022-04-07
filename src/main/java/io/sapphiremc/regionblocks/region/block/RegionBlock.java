@@ -70,6 +70,7 @@ public class RegionBlock {
 
         if (section.contains("temp-block") && section.isString("temp-block")) {
             String tempMaterial = section.getString("temp-block", "");
+            if (tempMaterial.isEmpty()) return;
             this.useTempBlock = true;
             this.tempBlockData = BlockDataSerializer.serialize(tempMaterial);
             if (this.tempBlockData == null) RegionBlocksPlugin.getInstance().getLogger().warning("Invalid temporary material (" + tempMaterial + ") for block section '" + section.getName() + "'!");
