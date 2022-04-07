@@ -49,6 +49,20 @@ regions:
       temp-block: "bedrock"
 
   forest:
+    # Woods
+    oak_wood:
+      regen-time: 6
+    spruce_wood:
+      regen-time: 6
+    birch_wood:
+      regen-time: 6
+    dark_oak_wood:
+      regen-time: 6
+    acacia_wood:
+      regen-time: 6
+    jungle_wood:
+      regen-time: 6
+    # Logs
     oak_log:
       regen-time: 6
     spruce_log:
@@ -61,6 +75,7 @@ regions:
       regen-time: 6
     jungle_log:
       regen-time: 6
+    # Leaves
     oak_leaves:
       regen-time: 6
     spruce_leaves:
