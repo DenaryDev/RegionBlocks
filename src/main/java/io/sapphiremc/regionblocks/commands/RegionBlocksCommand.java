@@ -91,6 +91,13 @@ public class RegionBlocksCommand implements CommandExecutor {
                             return true;
                         }
                     }
+                    case "shutdown" -> {
+                        if (args.length == 1 && sender.hasPermission("regionblocks.command.shutdown")) {
+                            regionManager.regenAllRegions();
+                            plugin.getServer().shutdown();
+                            return true;
+                        }
+                    }
                 }
             }
             sender.sendMessage("§bRegionBlocks §8| §6Помощь по команде /regionblocks (/rb)");
@@ -100,6 +107,7 @@ public class RegionBlocksCommand implements CommandExecutor {
             sender.sendMessage("§e/rb regen [регион] §7- §fРегенерирует указанный регион или регион, в котором вы находитесь");
             //noinspection SpellCheckingInspection
             sender.sendMessage("§e/rb regenall §7- §fРегенерирует все регионы.");
+            sender.sendMessage("§e/rb shutdown §7- §fРегенерирует все регионы и останавливает сервер.");
             sender.sendMessage(" ");
         }
         return false;
