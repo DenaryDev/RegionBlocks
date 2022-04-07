@@ -31,7 +31,16 @@ public class Region {
         Random random = new Random();
         for (String key : section.getKeys(false)) {
             if (section.contains(key) && section.isConfigurationSection(key)) {
-                regionBlocks.add(new RegionBlock(random, key, section.getConfigurationSection(key)));
+                RegionBlock regionblock = new RegionBlock(random, section.getConfigurationSection(key));
+                if (regionblock.getBlockData() != null && regionblock.getRegenSeconds() >= -1) {
+                    if (regionblock.isUseTempBlock()) {
+                        if (regionblock.getTempBlockData() != null) {
+                            regionBlocks.add(regionblock);
+                        }
+                    } else {
+                        regionBlocks.add(regionblock);
+                    }
+                }
             } else {
                 RegionBlocksPlugin.getInstance().getLogger().severe("Blocks section for region " + key + " not found!");
             }

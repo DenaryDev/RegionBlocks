@@ -7,6 +7,7 @@
  */
 package io.sapphiremc.regionblocks.region.block;
 
+import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -99,8 +100,15 @@ public class BlockDataSerializer {
     }
 
     public static BlockData serialize(String s) {
-        Material material = Material.matchMaterial(s.replaceAll("\\[([a-zA-Z0-9=,])+]", ""));
-        if (material == null) return null;
+        String mat = s.replaceAll("\\[([a-zA-Z0-9=,])+]", "");
+        Material material = Material.matchMaterial(mat);
+        if (material == null) {
+            RegionBlocksPlugin.getInstance().getLogger().warning("Unable to match material '" + mat + "'!");
+            return null;
+        } else if (!material.isBlock()) {
+            RegionBlocksPlugin.getInstance().getLogger().warning("Material " + mat + " is not a block!");
+            return null;
+        }
 
         BlockData blockData = new BlockData(material);
 
@@ -112,7 +120,6 @@ public class BlockDataSerializer {
                 String[] strings = fullTag.split("=");
                 String tag = strings[0];
                 String value = strings[1];
-                System.out.println("Tag is " + tag + " Value is " + value);
                 switch (tag) {
                     case "age" -> {
                         try {

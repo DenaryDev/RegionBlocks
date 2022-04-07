@@ -10,6 +10,7 @@ package io.sapphiremc.regionblocks.commands;
 import io.sapphiremc.regionblocks.region.Region;
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import io.sapphiremc.regionblocks.region.RegionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -99,27 +100,29 @@ public class RegionBlocksCommand implements CommandExecutor, TabCompleter {
                     case "shutdown" -> {
                         if (args.length == 1 && sender.hasPermission("regionblocks.command.shutdown")) {
                             regionManager.regenAllRegions();
-                            plugin.getServer().shutdown();
-                            sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы, останавливаю сервер!");
+                            sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы, останавливаю сервер...");
+                            Bukkit.getScheduler().runTaskLater(plugin, () -> plugin.getServer().shutdown(), 1L);
                             return true;
                         }
                     }
                 }
             }
-            sender.sendMessage("§bRegionBlocks §8| §6Помощь по команде /regionblocks (/rb)");
+
+            sender.sendMessage("§bRegionBlocks §8| §eПомощь по команде /regionblocks (/rb)");
             sender.sendMessage("§7§oАргументы в <> обязательны, а в [] не обязательны.");
-            sender.sendMessage("§e/rb reload §7- §fПерезагружает плагин.");
+            sender.sendMessage("§8§l* §6/rb reload §7- §eПерезагружает плагин.");
             //sender.sendMessage("§e/regionblocks toggle §7- §fПереключает ломание блоков.");
-            sender.sendMessage("§e/rb regen [регион] §7- §fРегенерирует указанный регион или регион, в котором вы находитесь");
+            sender.sendMessage("§8§l* §6/rb regen [регион] §7- §eРегенерирует указанный регион или регион, в котором вы находитесь");
             //noinspection SpellCheckingInspection
-            sender.sendMessage("§e/rb regenall §7- §fРегенерирует все регионы.");
-            sender.sendMessage("§e/rb shutdown §7- §fРегенерирует все регионы и останавливает сервер.");
+            sender.sendMessage("§8§l* §6/rb regenall §7- §eРегенерирует все регионы.");
+            sender.sendMessage("§8§l* §6/rb shutdown §7- §eРегенерирует все регионы и останавливает сервер.");
             sender.sendMessage(" ");
         }
         return true;
     }
 
     @Override
+    @SuppressWarnings("SpellCheckingInspection")
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         List<String> aliases = new ArrayList<>();
 

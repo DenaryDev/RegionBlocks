@@ -53,7 +53,7 @@ public class BlocksListener implements Listener {
                             BlockDataSerializer.apply(block, regionBlock.getTempBlockData()));
                 }
 
-                if (regionBlock.getRegenSeconds() != -1) {
+                if (regionBlock.getRegenSeconds() > 0) {
                     region.addBrokenBlock(brokenBlock);
                     Bukkit.getScheduler().runTaskLater(plugin, () ->
                             plugin.getRegionManager().regenBlock(region, block.getLocation()),

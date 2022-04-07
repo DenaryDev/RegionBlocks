@@ -42,34 +42,37 @@ public class RegionBlock {
 
     private int[] regenSeconds;
 
-    public RegionBlock(@NotNull Random random, @NotNull String material, @NotNull ConfigurationSection section) {
+    public RegionBlock(@NotNull Random random, @NotNull ConfigurationSection section) {
+        String material = section.getName();
         this.random = random;
         this.blockData = BlockDataSerializer.serialize(material);
+        if (this.blockData == null) RegionBlocksPlugin.getInstance().getLogger().warning("Invalid material (" + material + ") for block section '" + section.getName() + "'!");
 
         if (section.contains("regen-time")) {
             if (section.isInt("regen-time")) {
-                this.regenSeconds = new int[]{section.getInt("regen-time")};
+                this.regenSeconds = new int[]{section.getInt("regen-time", -2)};
             } else if (section.isString("regen-time")){
-                String[] strings = section.getString("regen-time", "").split("-");
+                String[] strings = section.getString("regen-time", "-2").split("-");
                 if (strings.length == 2) {
                     try {
                         int min = Integer.parseInt(strings[0]);
                         int max = Integer.parseInt(strings[1]);
                         this.regenSeconds = new int[]{min, max};
                     } catch (IllegalArgumentException ex) {
-                        RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block " + getBlockData().getMaterial());
+                        RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block section '" + section.getName() + "'!");
                         ex.printStackTrace();
                     }
                 }
             }
         } else {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block '" + getBlockData().getMaterial() + "'!");
+            RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block section '" + section.getName() + "'!");
         }
 
         if (section.contains("temp-block") && section.isString("temp-block")) {
             String tempMaterial = section.getString("temp-block", "");
             this.useTempBlock = true;
             this.tempBlockData = BlockDataSerializer.serialize(tempMaterial);
+            if (this.tempBlockData == null) RegionBlocksPlugin.getInstance().getLogger().warning("Invalid temporary material (" + tempMaterial + ") for block section '" + section.getName() + "'!");
         }
     }
 
@@ -79,8 +82,7 @@ public class RegionBlock {
         } else if (regenSeconds.length == 2) {
             return random.nextInt(regenSeconds[0], regenSeconds[1]);
         } else {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration time for block " + this.getBlockData().getMaterial() + ", use -1");
-            return -1;
+            return -2;
         }
     }
 
