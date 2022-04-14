@@ -9,6 +9,7 @@ package io.sapphiremc.regionblocks.region.block;
 
 import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import lombok.Getter;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.AnaloguePowerable;
@@ -42,6 +43,11 @@ public class RegionBlock {
 
     private int[] regenSeconds;
 
+    @Getter
+    private Particle regenParticleType;
+    @Getter
+    private int regenParticleCount;
+
     public RegionBlock(@NotNull Random random, @NotNull ConfigurationSection section) {
         String material = section.getName();
         this.random = random;
@@ -66,6 +72,21 @@ public class RegionBlock {
             }
         } else {
             RegionBlocksPlugin.getInstance().getLogger().severe("Invalid regeneration time for block section '" + section.getName() + "'!");
+        }
+
+        if (section.contains("regen-particle") && section.isConfigurationSection("regen-particle")) {
+            ConfigurationSection regenParticle = section.getConfigurationSection("regen-particle");
+            if (regenParticle.contains("type") && regenParticle.isString("type")) {
+                try {
+                    this.regenParticleType = Particle.valueOf(regenParticle.getString("type", "").toUpperCase());
+                } catch (IllegalArgumentException ex) {
+                    RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration particle type for block section '" + section.getName() + "'!");
+                    ex.printStackTrace();
+                }
+                this.regenParticleCount = regenParticle.getInt("count", 1);
+            } else {
+                RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration particle section for block section '" + section.getName() + "'!");
+            }
         }
 
         if (section.contains("temp-block") && section.isString("temp-block")) {

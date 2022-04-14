@@ -100,6 +100,10 @@ public class RegionManager {
             BlockDataSerializer.apply(location.getBlock(), block.getBlockData());
             region.removeBrokenBlock(block);
         });
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+                location.getWorld().spawnParticle(block.getRegenParticleType(), location.toCenterLocation().add(0, 0.6, 0), block.getRegenParticleCount(), .15, .05, .15)
+        );
     }
 
     public boolean canBreak(Player player) {

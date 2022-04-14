@@ -10,6 +10,7 @@ package io.sapphiremc.regionblocks.region.block;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 
 @SuppressWarnings("ClassCanBeRecord")
 @Getter
@@ -18,4 +19,6 @@ public class BrokenBlock {
     private final Location location;
     private final BlockData blockData;
     private final int priority;
+    private final Particle regenParticleType;
+    private final int regenParticleCount;
 }

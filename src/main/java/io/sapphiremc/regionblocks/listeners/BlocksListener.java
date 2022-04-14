@@ -47,7 +47,7 @@ public class BlocksListener implements Listener {
                 event.setCancelled(false);
                 Location location = block.getLocation();
                 BlockData blockData = BlockDataSerializer.serialize(block);
-                BrokenBlock brokenBlock = new BrokenBlock(location, blockData, region.getBlocksAtLocation(location).size());
+                BrokenBlock brokenBlock = new BrokenBlock(location, blockData, region.getBlocksAtLocation(location).size(), regionBlock.getRegenParticleType(), regionBlock.getRegenParticleCount());
 
                 if (regionBlock.isUseTempBlock()) {
                     Bukkit.getScheduler().runTask(plugin, () ->
