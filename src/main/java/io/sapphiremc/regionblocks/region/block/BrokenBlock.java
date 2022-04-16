@@ -19,6 +19,8 @@ public class BrokenBlock {
     private final Location location;
     private final BlockData blockData;
     private final int priority;
+    private final boolean useRegenParticle;
     private final Particle regenParticleType;
     private final int regenParticleCount;
+    private final double regenParticleExtra;
 }

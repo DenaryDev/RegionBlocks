@@ -88,11 +88,11 @@ public class RegionManager {
 
     public void regenRegion(Region region) {
         for (BrokenBlock block : region.getBrokenBlocks()) {
-            regenBlock(region, block.getLocation());
+            regenBlock(region, block.getLocation(), true);
         }
     }
 
-    public void regenBlock(Region region, Location location) {
+    public void regenBlock(Region region, Location location, boolean withCommand) {
         BrokenBlock block = region.getBrokenBlock(location);
         if (block == null) return;
 
@@ -101,9 +101,11 @@ public class RegionManager {
             region.removeBrokenBlock(block);
         });
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-                location.getWorld().spawnParticle(block.getRegenParticleType(), location.toCenterLocation().add(0, 0.6, 0), block.getRegenParticleCount(), .15, .05, .15)
-        );
+        if ((!withCommand || plugin.getConfig().getBoolean("use-particles-with-command", false)) && block.isUseRegenParticle()) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+                    location.getWorld().spawnParticle(block.getRegenParticleType(), location.toCenterLocation().add(0, 0.6, 0), block.getRegenParticleCount(), .175, .05, .175, block.getRegenParticleExtra())
+            );
+        }
     }
 
     public boolean canBreak(Player player) {

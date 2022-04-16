@@ -44,9 +44,13 @@ public class RegionBlock {
     private int[] regenSeconds;
 
     @Getter
+    private boolean useRegenParticle = false;
+    @Getter
     private Particle regenParticleType;
     @Getter
     private int regenParticleCount;
+    @Getter
+    private double regenParticleExtra;
 
     public RegionBlock(@NotNull Random random, @NotNull ConfigurationSection section) {
         String material = section.getName();
@@ -79,11 +83,13 @@ public class RegionBlock {
             if (regenParticle.contains("type") && regenParticle.isString("type")) {
                 try {
                     this.regenParticleType = Particle.valueOf(regenParticle.getString("type", "").toUpperCase());
+                    this.regenParticleCount = regenParticle.getInt("count", 3);
+                    this.regenParticleExtra = regenParticle.getDouble("extra", 0);
+                    useRegenParticle = true;
                 } catch (IllegalArgumentException ex) {
                     RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration particle type for block section '" + section.getName() + "'!");
                     ex.printStackTrace();
                 }
-                this.regenParticleCount = regenParticle.getInt("count", 1);
             } else {
                 RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration particle section for block section '" + section.getName() + "'!");
             }
