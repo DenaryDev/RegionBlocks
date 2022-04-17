@@ -11,6 +11,7 @@ import io.sapphiremc.regionblocks.RegionBlocksPlugin;
 import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import io.sapphiremc.regionblocks.region.block.RegionBlock;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,6 +29,7 @@ public class Region {
     private final List<String> names;
     private String permission = null;
     private String permissionMessage = null;
+    private int permissionMessageCooldown = 0;
 
     @SuppressWarnings("ConstantConditions")
     public Region(List<String> names, ConfigurationSection section) {
@@ -37,6 +39,9 @@ public class Region {
         }
         if (section.contains("permission-message") && section.isString("permission-message")) {
             permissionMessage = section.getString("permission-message");
+        }
+        if (section.contains("permission-message-cooldown") && section.isInt("permission-message-cooldown")) {
+            permissionMessageCooldown = section.getInt("permission-message-cooldown");
         }
 
         Random random = new Random();
@@ -61,9 +66,16 @@ public class Region {
         }
     }
 
+    private int cooldown = 0;
     public boolean checkBreak(Player player) {
         if (permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', permissionMessage));
+            if (permissionMessage != null && cooldown == 0) {
+                if (permissionMessageCooldown > 0) {
+                    cooldown = permissionMessageCooldown;
+                    Bukkit.getScheduler().runTaskLater(RegionBlocksPlugin.getInstance(), () -> cooldown = 0, permissionMessageCooldown);
+                }
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', permissionMessage));
+            }
             return false;
         }
         return true;
