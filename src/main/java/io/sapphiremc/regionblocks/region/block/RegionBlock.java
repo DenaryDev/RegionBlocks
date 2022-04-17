@@ -84,7 +84,7 @@ public class RegionBlock {
                 try {
                     this.regenParticleType = Particle.valueOf(regenParticle.getString("type", "").toUpperCase());
                     this.regenParticleCount = regenParticle.getInt("count", 3);
-                    this.regenParticleExtra = regenParticle.getDouble("extra", 0);
+                    this.regenParticleExtra = regenParticle.getDouble("extra", 1);
                     useRegenParticle = true;
                 } catch (IllegalArgumentException ex) {
                     RegionBlocksPlugin.getInstance().getLogger().warning("Invalid regeneration particle type for block section '" + section.getName() + "'!");
