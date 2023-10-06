@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2022 DenaryDev
+ * Copyright (c) 2023 Rafaelka
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.commands;
+package me.rafaelka.regionblocks.commands;
 
-import io.sapphiremc.regionblocks.region.Region;
-import io.sapphiremc.regionblocks.RegionBlocksPlugin;
-import io.sapphiremc.regionblocks.region.RegionManager;
+import lombok.RequiredArgsConstructor;
+import me.rafaelka.regionblocks.RegionBlocksPlugin;
+import me.rafaelka.regionblocks.region.Region;
+import me.rafaelka.regionblocks.region.RegionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,14 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("ClassCanBeRecord")
+@RequiredArgsConstructor
 public class RegionBlocksCommand implements CommandExecutor, TabCompleter {
 
     private final RegionBlocksPlugin plugin;
-
-    public RegionBlocksCommand(RegionBlocksPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -65,15 +62,15 @@ public class RegionBlocksCommand implements CommandExecutor, TabCompleter {
                         if (sender.hasPermission("regionblocks.command.regen")) {
                             if (args.length == 1) {
                                 if (sender instanceof Player player) {
-                                    Region region = regionManager.getRegionAtLocation(player.getLocation());
-                                    if (region != null) {
-                                        regionManager.regenRegion(region);
-                                        sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eРегион успешно регенерирован!");
+                                    final var regions = regionManager.getRenewableRegionsAt(player.getLocation());
+                                    if (regions != null) {
+                                        regionManager.regenRegions(regions);
+                                        sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы на вашей позиции регенерированы!");
                                     } else {
                                         sender.sendMessage("§bRegionBlocks §8| §cError §8> §eВы должны находиться в регионе или указать его название!");
                                     }
                                 } else {
-                                    sender.sendMessage("§bRegionBlocks §8| §cError §8> §eВы должны быть игроком, чтобы регенерировать регион, в котором находитесь!");
+                                    sender.sendMessage("§bRegionBlocks §8| §cError §8> §eРегенерация на позиции игрока доступна только игрокам! Но выможете использовать /rb regen <регион> для регенерации региона по названию.");
                                 }
                                 return true;
                             } else if (args.length == 2) {

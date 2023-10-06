@@ -1,38 +1,26 @@
 /*
- * Copyright (c) 2022 DenaryDev
+ * Copyright (c) 2023 Rafaelka
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.region.block;
+package me.rafaelka.regionblocks.region.block;
 
-import io.sapphiremc.regionblocks.RegionBlocksPlugin;
+import me.rafaelka.regionblocks.RegionBlocksPlugin;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.AnaloguePowerable;
-import org.bukkit.block.data.Attachable;
-import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.Levelled;
-import org.bukkit.block.data.Lightable;
-import org.bukkit.block.data.Openable;
-import org.bukkit.block.data.Orientable;
-import org.bukkit.block.data.Powerable;
-import org.bukkit.block.data.Rail;
-import org.bukkit.block.data.Rotatable;
-import org.bukkit.block.data.Snowable;
-import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.*;
 import org.bukkit.block.data.type.Bamboo;
+import org.bukkit.block.data.type.PinkPetals;
 
 import java.util.Arrays;
 
 public class BlockDataSerializer {
 
-    public static BlockData serialize(Block block) {
+    /*public static BlockData serialize(Block block) {
         BlockData blockData = new BlockData(block.getType());
 
         if (block.getBlockData() instanceof Ageable ageable) {
@@ -51,8 +39,24 @@ public class BlockDataSerializer {
             blockData.setHalf(bisected.getHalf());
             blockData.setHasTags(true);
         }
+        if (block.getBlockData() instanceof Brushable brushable) {
+            blockData.setDusted(brushable.getDusted());
+            blockData.setHasTags(true);
+        }
         if (block.getBlockData() instanceof Directional directional) {
             blockData.setFacing(directional.getFacing());
+            blockData.setHasTags(true);
+        }
+        if (block.getBlockData() instanceof FaceAttachable faceAttachable) {
+            blockData.setAttachedFace(faceAttachable.getAttachedFace());
+            blockData.setHasTags(true);
+        }
+        if (block.getBlockData() instanceof Hangable hangable) {
+            blockData.setHanging(hangable.isHanging());
+            blockData.setHasTags(true);
+        }
+        if (block.getBlockData() instanceof Hatchable hatchable) {
+            blockData.setHatch(hatchable.getHatch());
             blockData.setHasTags(true);
         }
         if (block.getBlockData() instanceof Levelled levelled) {
@@ -95,9 +99,13 @@ public class BlockDataSerializer {
             blockData.setBambooLeaves(bamboo.getLeaves());
             blockData.setHasTags(true);
         }
+        if (block.getBlockData() instanceof PinkPetals pinkPetals) {
+            blockData.setFlowerAmount(pinkPetals.getFlowerAmount());
+            blockData.setHasTags(true);
+        }
 
         return blockData;
-    }
+    }*/
 
     public static BlockData serialize(String s) {
         String mat = s.replaceAll("\\[([a-zA-Z0-9=,])+]", "");
@@ -149,6 +157,13 @@ public class BlockDataSerializer {
                             ex.printStackTrace();
                         }
                     }
+                    case "dusted" -> {
+                        try {
+                            blockData.setDusted(Integer.parseInt(value));
+                        } catch (IllegalArgumentException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                     case "facing" -> {
                         try {
                             blockData.setFacing(BlockFace.valueOf(value.toUpperCase()));
@@ -158,7 +173,21 @@ public class BlockDataSerializer {
                     }
                     case "face" -> {
                         try {
-                            blockData.setFaceAttached(BlockFace.valueOf(value.toUpperCase()));
+                            blockData.setAttachedFace(FaceAttachable.AttachedFace.valueOf(value.toUpperCase()));
+                        } catch (IllegalArgumentException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    case "hanging" -> {
+                        try {
+                            blockData.setHanging(Boolean.parseBoolean(value));
+                        } catch (IllegalArgumentException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    case "hatch" -> {
+                        try {
+                            blockData.setHatch(Integer.parseInt(value));
                         } catch (IllegalArgumentException ex) {
                             ex.printStackTrace();
                         }
@@ -234,6 +263,13 @@ public class BlockDataSerializer {
                             ex.printStackTrace();
                         }
                     }
+                    case "flower_amount" -> {
+                        try {
+                            blockData.setFlowerAmount(Integer.parseInt(value));
+                        } catch (IllegalArgumentException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -242,6 +278,11 @@ public class BlockDataSerializer {
 
     public static void apply(Block block, BlockData blockData) {
         block.setType(blockData.getMaterial());
+
+        if (blockData.getOriginData() != null) {
+            block.setBlockData(blockData.getOriginData());
+            return;
+        }
 
         if (block.getBlockData() instanceof Ageable ageable) {
             ageable.setAge(blockData.getAge());
@@ -259,9 +300,25 @@ public class BlockDataSerializer {
             bisected.setHalf(blockData.getHalf());
             block.setBlockData(bisected);
         }
+        if (block.getBlockData() instanceof Brushable brushable) {
+            brushable.setDusted(blockData.getDusted());
+            block.setBlockData(brushable);
+        }
         if (block.getBlockData() instanceof Directional directional) {
             directional.setFacing(blockData.getFacing());
             block.setBlockData(directional);
+        }
+        if (block.getBlockData() instanceof FaceAttachable faceAttachable) {
+            faceAttachable.setAttachedFace(blockData.getAttachedFace());
+            block.setBlockData(faceAttachable);
+        }
+        if (block.getBlockData() instanceof Hangable hangable) {
+            hangable.setHanging(blockData.isHanging());
+            block.setBlockData(hangable);
+        }
+        if (block.getBlockData() instanceof Hatchable hatchable) {
+            hatchable.setHatch(blockData.getHatch());
+            block.setBlockData(hatchable);
         }
         if (block.getBlockData() instanceof Levelled levelled) {
             levelled.setLevel(blockData.getLevel());
@@ -302,6 +359,10 @@ public class BlockDataSerializer {
         if (block.getBlockData() instanceof Bamboo bamboo) {
             bamboo.setLeaves(blockData.getBambooLeaves());
             block.setBlockData(bamboo);
+        }
+        if (block.getBlockData() instanceof PinkPetals pinkPetals) {
+            pinkPetals.setFlowerAmount(blockData.getFlowerAmount());
+            block.setBlockData(pinkPetals);
         }
     }
 }

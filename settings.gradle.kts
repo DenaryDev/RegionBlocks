@@ -1,1 +1,1 @@
-rootProject.name = "SapphireRegionBlocks"
+rootProject.name = "RegionBlocks"

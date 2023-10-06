@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2022 DenaryDev
+ * Copyright (c) 2023 Rafaelka
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks;
+package me.rafaelka.regionblocks;
 
-import io.sapphiremc.regionblocks.commands.RegionBlocksCommand;
-import io.sapphiremc.regionblocks.listeners.BlocksListener;
-import io.sapphiremc.regionblocks.region.RegionManager;
 import lombok.Getter;
+import me.rafaelka.regionblocks.commands.RegionBlocksCommand;
+import me.rafaelka.regionblocks.listeners.BlocksListener;
+import me.rafaelka.regionblocks.region.RegionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,6 +18,7 @@ public class RegionBlocksPlugin extends JavaPlugin {
 
     @Getter
     private static RegionBlocksPlugin instance;
+
     @Getter
     private volatile RegionManager regionManager;
 

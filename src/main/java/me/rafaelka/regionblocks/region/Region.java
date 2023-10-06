@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2022 DenaryDev
+ * Copyright (c) 2023 Rafaelka
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.region;
+package me.rafaelka.regionblocks.region;
 
-import io.sapphiremc.regionblocks.RegionBlocksPlugin;
-import io.sapphiremc.regionblocks.region.block.BrokenBlock;
-import io.sapphiremc.regionblocks.region.block.RegionBlock;
 import lombok.Getter;
+import me.rafaelka.regionblocks.RegionBlocksPlugin;
+import me.rafaelka.regionblocks.region.block.BrokenBlock;
+import me.rafaelka.regionblocks.region.block.RegionBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,12 +44,12 @@ public class Region {
             permissionMessageCooldown = section.getInt("permission-message-cooldown");
         }
 
-        Random random = new Random();
+        final var random = new Random();
         if (section.contains("blocks") && section.isConfigurationSection("blocks")) {
             ConfigurationSection blocks = section.getConfigurationSection("blocks");
-            for (String key : blocks.getKeys(false)) {
+            for (final var key : blocks.getKeys(false)) {
                 if (blocks.contains(key) && blocks.isConfigurationSection(key)) {
-                    RegionBlock regionblock = new RegionBlock(random, blocks.getConfigurationSection(key));
+                    final var regionblock = new RegionBlock(random, blocks.getConfigurationSection(key));
                     if (regionblock.getBlockData() != null && regionblock.getRegenSeconds() >= -1) {
                         if (regionblock.isUseTempBlock()) {
                             if (regionblock.getTempBlockData() != null) {
@@ -92,8 +92,8 @@ public class Region {
     }
 
     public BrokenBlock getBrokenBlock(Location location) {
-        List<BrokenBlock> blocksAtLocation = getBlocksAtLocation(location);
-        if (blocksAtLocation.size() > 0) {
+        final var blocksAtLocation = getBlocksAtLocation(location);
+        if (!blocksAtLocation.isEmpty()) {
             return blocksAtLocation.get(blocksAtLocation.size() - 1);
         } else {
             return null;
@@ -101,6 +101,6 @@ public class Region {
     }
 
     public List<BrokenBlock> getBlocksAtLocation(Location location) {
-        return brokenBlocks.stream().filter(brokenBlock -> brokenBlock.getLocation().equals(location)).toList();
+        return brokenBlocks.stream().filter(brokenBlock -> brokenBlock.location().equals(location)).toList();
     }
 }

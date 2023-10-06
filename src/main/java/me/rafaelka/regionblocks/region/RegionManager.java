@@ -1,30 +1,27 @@
 /*
- * Copyright (c) 2022 DenaryDev
+ * Copyright (c) 2023 Rafaelka
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package io.sapphiremc.regionblocks.region;
+package me.rafaelka.regionblocks.region;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import io.sapphiremc.regionblocks.RegionBlocksPlugin;
-import io.sapphiremc.regionblocks.region.block.BlockDataSerializer;
-import io.sapphiremc.regionblocks.region.block.BrokenBlock;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.rafaelka.regionblocks.RegionBlocksPlugin;
+import me.rafaelka.regionblocks.region.block.BlockDataSerializer;
+import me.rafaelka.regionblocks.region.block.BrokenBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class RegionManager {
@@ -40,11 +37,11 @@ public class RegionManager {
         regions.clear();
 
         if (config.contains("regions") && config.isConfigurationSection("regions")) {
-            for (String key : config.getConfigurationSection("regions").getKeys(false)) {
+            for (final var key : config.getConfigurationSection("regions").getKeys(false)) {
                 if (config.contains("regions." + key) && config.isConfigurationSection("regions." + key)) {
-                    List<String> names = key.contains(";") ? Arrays.stream(key.split(";")).toList() : List.of(key);
-                    Region region = new Region(names, config.getConfigurationSection("regions." + key));
-                    if (region.getRegionBlocks().size() > 0) regions.add(region);
+                    final var names = key.contains(";") ? Arrays.stream(key.split(";")).toList() : List.of(key);
+                    final var region = new Region(names, config.getConfigurationSection("regions." + key));
+                    if (!region.getRegionBlocks().isEmpty()) regions.add(region);
                 } else {
                     plugin.getLogger().severe("Configuration section for region " + key + " not found!");
                 }
@@ -55,29 +52,31 @@ public class RegionManager {
     }
 
     public Region getRegionByName(String name) {
-        for (Region region : regions) {
+        for (final var region : regions) {
             if (region.getNames().contains(name)) return region;
         }
         return null;
     }
 
-    public Region getRegionAtLocation(Location loc) {
-        int priority = -1;
-        String regionName = "";
-        com.sk89q.worldguard.protection.managers.RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld()));
-        if (regionManager == null) return null;
-        ApplicableRegionSet set = regionManager.getApplicableRegions(BukkitAdapter.adapt(loc).toVector().toBlockPoint());
-        for (ProtectedRegion region : set) {
-            if (region.getPriority() > priority) {
-                priority = region.getPriority();
-                regionName = region.getId();
+    public List<Region> getRenewableRegionsAt(Location loc) {
+        final var wgRegions = getWGRegionsAt(loc);
+        if (wgRegions == null) return Collections.emptyList();
+        final var wgRegionNames = wgRegions.getRegions().stream().map(ProtectedRegion::getId).toList();
+        if (regions.isEmpty()) return Collections.emptyList();
+
+        final var result = new ArrayList<Region>();
+        for (final var region : regions) {
+            if (region.getNames().stream().anyMatch(wgRegionNames::contains)) {
+                result.add(region);
             }
         }
-        for (Region regionToReturn : regions) {
-            if (regionToReturn.getNames().contains(regionName))
-                return regionToReturn;
-        }
-        return null;
+        return result;
+    }
+
+    private ApplicableRegionSet getWGRegionsAt(Location loc) {
+        final var regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld()));
+        if (regionManager == null) return null;
+        return regionManager.getApplicableRegions(BukkitAdapter.adapt(loc).toVector().toBlockPoint());
     }
 
     public void regenAllRegions() {
@@ -86,24 +85,30 @@ public class RegionManager {
         }
     }
 
+    public void regenRegions(List<Region> regions) {
+        for (Region region : regions) {
+            regenRegion(region);
+        }
+    }
+
     public void regenRegion(Region region) {
         for (BrokenBlock block : region.getBrokenBlocks()) {
-            regenBlock(region, block.getLocation(), true);
+            regenBlock(region, block.location(), true);
         }
     }
 
     public void regenBlock(Region region, Location location, boolean withCommand) {
-        BrokenBlock block = region.getBrokenBlock(location);
+        final var block = region.getBrokenBlock(location);
         if (block == null) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            BlockDataSerializer.apply(location.getBlock(), block.getBlockData());
+            BlockDataSerializer.apply(location.getBlock(), block.blockData());
             region.removeBrokenBlock(block);
         });
 
-        if ((!withCommand || plugin.getConfig().getBoolean("use-particles-with-command", false)) && block.isUseRegenParticle()) {
+        if ((!withCommand || plugin.getConfig().getBoolean("use-particles-with-command", false)) && block.useRegenParticle()) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-                    location.getWorld().spawnParticle(block.getRegenParticleType(), location.toCenterLocation().add(0, 0.6, 0), block.getRegenParticleCount(), .175, .05, .175, block.getRegenParticleExtra())
+                    location.getWorld().spawnParticle(block.regenParticleType(), location.toCenterLocation().add(0, 0.6, 0), block.regenParticleCount(), .175, .05, .175, block.regenParticleExtra())
             );
         }
     }

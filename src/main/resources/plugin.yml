@@ -1,11 +1,11 @@
 name: RegionBlocks
 version: ${version}
-main: io.sapphiremc.regionblocks.RegionBlocksPlugin
-description: Another plugin for activmine
+main: me.rafaelka.regionblocks.RegionBlocksPlugin
+description: Another plugin for ActivMine
 authors:
   - qKing12
-  - DenaryDev
-api-version: 1.16
+  - Rafaelka
+api-version: 1.20
 depend:
   - WorldGuard
 
@@ -26,7 +26,7 @@ permissions:
       - regionblocks.command.regenall
 
   regionblocks.command.use:
-    description: Allows to use /regionblocks command
+    description: Allows to use /regionblocks [help] command
     default: op
 
   regionblocks.command.reload:
