@@ -89,14 +89,14 @@ public class RegionBlocksCommand implements CommandExecutor, TabCompleter {
                     case "regenall" -> {
                         //noinspection SpellCheckingInspection
                         if (args.length == 1 && sender.hasPermission("regionblocks.command.regenall")) {
-                            regionManager.regenAllRegions();
+                            regionManager.regenRegions(regionManager.getRegions());
                             sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы!");
                             return true;
                         }
                     }
                     case "shutdown" -> {
                         if (args.length == 1 && sender.hasPermission("regionblocks.command.shutdown")) {
-                            regionManager.regenAllRegions();
+                            regionManager.regenRegions(regionManager.getRegions());
                             sender.sendMessage("§bRegionBlocks §8| §aInfo §8> §eВсе регионы успешно регенерированы, останавливаю сервер...");
                             Bukkit.getScheduler().runTaskLater(plugin, () -> plugin.getServer().shutdown(), 1L);
                             return true;

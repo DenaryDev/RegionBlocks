@@ -72,6 +72,14 @@ regions:
         regen-time: 20-40
         temp-block: "beetroots[age=1]"
 
+    # Время регенерации ягод на кустах
+    # Можно удалить, если не нужно
+    berries:
+      # Время регенерации сладких (красных) ягод
+      sweet-berries-regen-time: 5
+      # Время регенерации светящихся ягод
+      glow-berries-regen-time: 5
+
   mine:
     #permission: "regionblocks.region.mine"
     blocks:

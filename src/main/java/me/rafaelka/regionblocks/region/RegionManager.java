@@ -34,6 +34,9 @@ public class RegionManager {
 
     @SuppressWarnings("ConstantConditions")
     public void reloadRegions(FileConfiguration config) {
+        for (final var region : regions) {
+            regenRegion(region);
+        }
         regions.clear();
 
         if (config.contains("regions") && config.isConfigurationSection("regions")) {
@@ -77,12 +80,6 @@ public class RegionManager {
         final var regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld()));
         if (regionManager == null) return null;
         return regionManager.getApplicableRegions(BukkitAdapter.adapt(loc).toVector().toBlockPoint());
-    }
-
-    public void regenAllRegions() {
-        for (Region region : regions) {
-            regenRegion(region);
-        }
     }
 
     public void regenRegions(List<Region> regions) {
