@@ -15,11 +15,13 @@ import me.rafaelka.regionblocks.region.block.BlockDataSerializer;
 import me.rafaelka.regionblocks.region.block.BrokenBlock;
 import me.rafaelka.regionblocks.region.block.RegionBlock;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerHarvestBlockEvent;
 
 @RequiredArgsConstructor
 public class BlocksListener implements Listener {
@@ -67,6 +69,37 @@ public class BlocksListener implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin, () ->
                             plugin.getRegionManager().regenBlock(region, block.getLocation(), false),
                     regionBlock.getRegenSeconds() * 20L);
+        }
+    }
+
+    @EventHandler
+    public void onHarvest(PlayerHarvestBlockEvent event) {
+        final var block = event.getHarvestedBlock();
+
+        final var regions = plugin.getRegionManager().getRenewableRegionsAt(block.getLocation());
+        if (regions.isEmpty()) return;
+        event.setCancelled(true);
+
+        final var player = event.getPlayer();
+
+        for (final var region : regions) {
+            if (region.checkBreak(player) && region.hasBerries()) {
+                event.setCancelled(false);
+                final var location = block.getLocation();
+                final var blockData = new BlockData(block.getType(), block.getBlockData());
+                final var harvestedBush = new BrokenBlock(location, blockData, region.getBlocksAtLocation(location).size(), false, null, 0, 0);
+                final var regenTime = switch (block.getType()) {
+                    case SWEET_BERRY_BUSH -> region.getSweetBerriesRegenTime();
+                    case CAVE_VINES, CAVE_VINES_PLANT -> region.getGlowBerriesRegenTime();
+                    default -> 0;
+                };
+                if (regenTime > 0) {
+                    region.addBrokenBlock(harvestedBush);
+                    Bukkit.getScheduler().runTaskLater(plugin, () ->
+                                    plugin.getRegionManager().regenBlock(region, block.getLocation(), false),
+                            regenTime * 20L);
+                }
+            }
         }
     }
 }

@@ -31,6 +31,9 @@ public class Region {
     private String permissionMessage = null;
     private int permissionMessageCooldown = 0;
 
+    private int sweetBerriesRegenTime = -1;
+    private int glowBerriesRegenTime = -1;
+
     @SuppressWarnings("ConstantConditions")
     public Region(List<String> names, ConfigurationSection section) {
         this.names = names;
@@ -46,7 +49,7 @@ public class Region {
 
         final var random = new Random();
         if (section.contains("blocks") && section.isConfigurationSection("blocks")) {
-            ConfigurationSection blocks = section.getConfigurationSection("blocks");
+            final var blocks = section.getConfigurationSection("blocks");
             for (final var key : blocks.getKeys(false)) {
                 if (blocks.contains(key) && blocks.isConfigurationSection(key)) {
                     final var regionblock = new RegionBlock(random, blocks.getConfigurationSection(key));
@@ -63,6 +66,16 @@ public class Region {
                     RegionBlocksPlugin.getInstance().getLogger().severe("Section for block " + key + " in region " + section.getName() + " not found!");
                 }
             }
+        }
+
+        if (section.contains("berries") && section.isConfigurationSection("berries")) {
+            final var berries = section.getConfigurationSection("berries");
+            sweetBerriesRegenTime = berries.getInt("sweet-berries-regen-time", -1);
+            glowBerriesRegenTime = berries.getInt("glow-berries-regen-time", -1);
+        }
+
+        if (regionBlocks.isEmpty() && sweetBerriesRegenTime < 1 && glowBerriesRegenTime < 1) {
+            RegionBlocksPlugin.getInstance().getLogger().warning("Region " + section.getName() + " doesn't contains any blocks");
         }
     }
 
@@ -102,5 +115,9 @@ public class Region {
 
     public List<BrokenBlock> getBlocksAtLocation(Location location) {
         return brokenBlocks.stream().filter(brokenBlock -> brokenBlock.location().equals(location)).toList();
+    }
+
+    public boolean hasBerries() {
+        return sweetBerriesRegenTime > 0 || glowBerriesRegenTime > 0;
     }
 }
