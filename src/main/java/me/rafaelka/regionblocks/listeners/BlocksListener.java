@@ -15,7 +15,6 @@ import me.rafaelka.regionblocks.region.block.BlockDataSerializer;
 import me.rafaelka.regionblocks.region.block.BrokenBlock;
 import me.rafaelka.regionblocks.region.block.RegionBlock;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +41,7 @@ public class BlocksListener implements Listener {
 
         checkRegions:
         for (final var region : regions) {
-            if (region.checkBreak(player)) {
+            if (region.checkBreak(player) && !region.getRegionBlocks().isEmpty()) {
                 for (final var regionBlock : region.getRegionBlocks()) {
                     if (regionBlock.compareBlock(block)) {
                         event.setCancelled(false);
@@ -72,8 +71,8 @@ public class BlocksListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onHarvest(PlayerHarvestBlockEvent event) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onHarvestBlock(PlayerHarvestBlockEvent event) {
         final var block = event.getHarvestedBlock();
 
         final var regions = plugin.getRegionManager().getRenewableRegionsAt(block.getLocation());

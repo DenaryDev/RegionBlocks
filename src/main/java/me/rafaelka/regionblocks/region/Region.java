@@ -18,8 +18,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 @Getter
 public class Region {
@@ -27,16 +30,20 @@ public class Region {
     private final List<RegionBlock> regionBlocks = new ArrayList<>();
     private final List<BrokenBlock> brokenBlocks = new ArrayList<>();
     private final List<String> names;
+    private final Random random;
     private String permission = null;
     private String permissionMessage = null;
     private int permissionMessageCooldown = 0;
 
-    private int sweetBerriesRegenTime = -1;
-    private int glowBerriesRegenTime = -1;
+    private final Map<UUID, Integer> messageCooldowns = new HashMap<>();
+
+    private int[] sweetBerriesRegenTime = new int[0];
+    private int[] glowBerriesRegenTime = new int[0];
 
     @SuppressWarnings("ConstantConditions")
     public Region(List<String> names, ConfigurationSection section) {
         this.names = names;
+        this.random = new Random();
         if (section.contains("permission") && section.isString("permission")) {
             permission = section.getString("permission");
         }
@@ -47,7 +54,6 @@ public class Region {
             permissionMessageCooldown = section.getInt("permission-message-cooldown");
         }
 
-        final var random = new Random();
         if (section.contains("blocks") && section.isConfigurationSection("blocks")) {
             final var blocks = section.getConfigurationSection("blocks");
             for (final var key : blocks.getKeys(false)) {
@@ -70,22 +76,52 @@ public class Region {
 
         if (section.contains("berries") && section.isConfigurationSection("berries")) {
             final var berries = section.getConfigurationSection("berries");
-            sweetBerriesRegenTime = berries.getInt("sweet-berries-regen-time", -1);
-            glowBerriesRegenTime = berries.getInt("glow-berries-regen-time", -1);
+            if (berries.isInt("sweet-berries-regen-time")) {
+                this.sweetBerriesRegenTime = new int[]{berries.getInt("sweet-berries-regen-time", -1)};
+            } else if (berries.isString("sweet-berries-regen-time")) {
+                final var sweetBerries = berries.getString("sweet-berries-regen-time", "-1").split("-");
+                if (sweetBerries.length == 2) {
+                    try {
+                        final int min = Integer.parseInt(sweetBerries[0]);
+                        final int max = Integer.parseInt(sweetBerries[1]);
+                        if (min > 0 && max > 0)
+                            this.sweetBerriesRegenTime = new int[]{min, max};
+                    } catch (IllegalArgumentException ex) {
+                        RegionBlocksPlugin.getInstance().getLogger().severe("Invalid regeneration time for sweet berries!");
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            if (berries.isInt("glow-berries-regen-time")) {
+                this.glowBerriesRegenTime = new int[]{berries.getInt("glow-berries-regen-time", -1)};
+            } else if (berries.isString("glow-berries-regen-time")) {
+                final var glowBerries = berries.getString("glow-berries-regen-time", "-1").split("-");
+                if (glowBerries.length == 2) {
+                    try {
+                        final int min = Integer.parseInt(glowBerries[0]);
+                        final int max = Integer.parseInt(glowBerries[1]);
+                        if (min > 0 && max > 0)
+                            this.glowBerriesRegenTime = new int[]{min, max};
+                    } catch (IllegalArgumentException ex) {
+                        RegionBlocksPlugin.getInstance().getLogger().severe("Invalid regeneration time for glow berries!");
+                        ex.printStackTrace();
+                    }
+                }
+            }
         }
 
-        if (regionBlocks.isEmpty() && sweetBerriesRegenTime < 1 && glowBerriesRegenTime < 1) {
-            RegionBlocksPlugin.getInstance().getLogger().warning("Region " + section.getName() + " doesn't contains any blocks");
+        if (regionBlocks.isEmpty() && sweetBerriesRegenTime.length < 1 && glowBerriesRegenTime.length < 1) {
+            RegionBlocksPlugin.getInstance().getLogger().warning("Region " + section.getName() + " doesn't contains any blocks or berries");
         }
     }
 
-    private int cooldown = 0;
     public boolean checkBreak(Player player) {
+        final var uuid = player.getUniqueId();
         if (permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
-            if (permissionMessage != null && cooldown == 0) {
+            if (permissionMessage != null && messageCooldowns.get(uuid) == 0) {
                 if (permissionMessageCooldown > 0) {
-                    cooldown = permissionMessageCooldown;
-                    Bukkit.getScheduler().runTaskLater(RegionBlocksPlugin.getInstance(), () -> cooldown = 0, permissionMessageCooldown);
+                    messageCooldowns.put(uuid, permissionMessageCooldown);
+                    Bukkit.getScheduler().runTaskLater(RegionBlocksPlugin.getInstance(), () -> messageCooldowns.remove(uuid), permissionMessageCooldown);
                 }
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', permissionMessage));
             }
@@ -118,6 +154,26 @@ public class Region {
     }
 
     public boolean hasBerries() {
-        return sweetBerriesRegenTime > 0 || glowBerriesRegenTime > 0;
+        return (sweetBerriesRegenTime.length > 0) || glowBerriesRegenTime.length > 0;
+    }
+
+    public int getSweetBerriesRegenTime() {
+        if (sweetBerriesRegenTime.length == 1) {
+            return sweetBerriesRegenTime[0];
+        } else if (sweetBerriesRegenTime.length == 2) {
+            return random.nextInt(sweetBerriesRegenTime[0], sweetBerriesRegenTime[1]);
+        } else {
+            return -2;
+        }
+    }
+
+    public int getGlowBerriesRegenTime() {
+        if (glowBerriesRegenTime.length == 1) {
+            return glowBerriesRegenTime[0];
+        } else if (glowBerriesRegenTime.length == 2) {
+            return random.nextInt(glowBerriesRegenTime[0], glowBerriesRegenTime[1]);
+        } else {
+            return -2;
+        }
     }
 }

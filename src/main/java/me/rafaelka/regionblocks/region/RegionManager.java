@@ -44,7 +44,7 @@ public class RegionManager {
                 if (config.contains("regions." + key) && config.isConfigurationSection("regions." + key)) {
                     final var names = key.contains(";") ? Arrays.stream(key.split(";")).toList() : List.of(key);
                     final var region = new Region(names, config.getConfigurationSection("regions." + key));
-                    if (!region.getRegionBlocks().isEmpty()) regions.add(region);
+                    if (!region.getRegionBlocks().isEmpty() || region.hasBerries()) regions.add(region);
                 } else {
                     plugin.getLogger().severe("Configuration section for region " + key + " not found!");
                 }
